@@ -9,6 +9,8 @@
 #define ID_VENDOR 0x1d34
 #define ID_PRODUCT 0x0004
 
+#define CALL(X) result = X; if(result < 0) { printf("Fehler %s\n", usb_strerror()); }
+
 class USBLamp {
 public:
     USBLamp();
