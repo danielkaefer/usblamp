@@ -20,9 +20,7 @@ struct usb_device *findDisplay() {
 
     busses = usb_get_busses();
 
-
     struct usb_bus *bus;
-    int c, i, a;
 
     /* ... */
 
@@ -32,47 +30,47 @@ struct usb_device *findDisplay() {
         for (dev = bus->devices; dev; dev = dev->next) {
             /* Check if this device is a printer */
 
-            printf("%04X:%04X\n", dev->descriptor.idVendor, dev->descriptor.idProduct);
+            //printf("%04X:%04X\n", dev->descriptor.idVendor, dev->descriptor.idProduct);
 
-            if(0) {
+            if (0x1d34 == dev->descriptor.idVendor && 0x0004 == dev->descriptor.idProduct) {
                 return dev;
             }
 
-            /* Opens a USB device */
-            usb_dev_handle *udev;
-            udev = usb_open(dev);
-            if (udev) {
-                if (dev->descriptor.iManufacturer) {
-                    char string[256];
-                    int ret = usb_get_string_simple(udev, dev->descriptor.iManufacturer, string, sizeof (string));
-                    if (ret > 0) {
-                        printf("    Manufacturer: %s\n", string);
-                    }
-                }
-            }
-            usb_close(udev);
-
-            if (dev->descriptor.bDeviceClass == 7) {
-                /* Open the device, claim the interface and do your processing */
-            }
-
-            /* Loop through all of the configurations */
-            for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
-                /* Loop through all of the interfaces */
-                for (i = 0; i < dev->config[c].bNumInterfaces; i++) {
-                    /* Loop through all of the alternate settings */
-                    for (a = 0; a < dev->config[c].interface[i].num_altsetting; a++) {
-                        /* Check if this interface is a printer */
-                        if (dev->config[c].interface[i].altsetting[a].bInterfaceClass == 7) {
-                            /* Open the device, set the alternate setting, claim the interface and do your processing */
-                        }
-                    }
-                }
-            }
         }
     }
 
     return NULL;
+}
+
+void send(usb_dev_handle *handler) {
+    int interface = 0;
+    int result;
+
+    result = usb_claim_interface(handler,interface);
+    if(result < 0) {
+        // todo error handling
+        printf("Fehler %d\n", result);
+    }
+
+    int requesttype = 0;
+    int request = 0xA;
+    int value = 0;
+    int index = 0;
+    char *bytes = "ba7fb675";
+    int size = 8;
+    int timeout = 100;
+
+    result = usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout);
+    if(result < 0) {
+        // todo error handling
+        printf("Fehler %d\n", result);
+    }
+
+    result = usb_release_interface(handler, interface);
+    if(result < 0) {
+        // todo error handling
+        printf("Fehler %d\n", result);
+    }
 }
 
 /*
@@ -81,8 +79,14 @@ struct usb_device *findDisplay() {
 int main(int argc, char** argv) {
     printf("start\n");
     struct usb_device *display = findDisplay();
-    if(display) {
+    if (display) {
 
+        printf("Lampe gefunden\n");
+        usb_dev_handle *handler = usb_open(display);
+
+        send(handler);
+
+        usb_close(handler);
     } else {
         printf("Keine Lampe gefunden");
     }
