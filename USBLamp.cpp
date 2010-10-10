@@ -43,6 +43,7 @@ void USBLamp::open() {
     return;
     // todo keine lampe gefunden
 }
+
 void USBLamp::send() {
     int requesttype = 0x21;
     int request = 0x09;
@@ -56,6 +57,17 @@ void USBLamp::send() {
 
 	int result;
     CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
+}
+
+void USBLamp::sendInterrupt() {
+	int ep = 0x80;
+	char *bytes = (char *) malloc(sizeof(char)*8);
+	int size = 8;
+	int timeout = 250;
+
+	int result;
+	//CALL(usb_interrupt_read(handler, ep, bytes, size, timeout))
+	CALL(usb_interrupt_write(handler, ep, bytes, size, timeout))
 }
 
 void USBLamp::close() {

@@ -16,6 +16,7 @@ public:
     USBLamp();
     void open();
     void send(); // parameter color, ...
+	void sendInterrupt(); 
     void close();
     virtual ~USBLamp();
 private:

@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
     USBLamp lamp = USBLamp();
     lamp.open();
     lamp.send();
+	lamp.sendInterrupt();
     lamp.close();
     printf("end\n");
 
