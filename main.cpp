@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <usb.h>
 
-#include "USBLamp.h"
+#include "USBLamp.hpp"
 
 //using namespace std;
 

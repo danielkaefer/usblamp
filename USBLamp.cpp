@@ -1,4 +1,4 @@
-#include "USBLamp.h"
+#include "USBLamp.hpp"
 
 
 USBLamp::USBLamp() {
