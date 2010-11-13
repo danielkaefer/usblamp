@@ -18,9 +18,13 @@ int main(int argc, char** argv) {
     printf("start\n");
     USBLamp lamp = USBLamp();
     lamp.open();
-    lamp.send();
-	lamp.sendInterrupt();
-    lamp.close();
+    if(lamp.isConnected()) {
+        lamp.send();
+        lamp.sendInterrupt();
+        lamp.close();
+    } else {
+        printf("no lamp found\n");
+    }
     printf("end\n");
 
     return 0;

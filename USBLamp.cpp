@@ -44,6 +44,10 @@ void USBLamp::open() {
     // todo keine lampe gefunden
 }
 
+bool USBLamp::isConnected() {
+    return handler != NULL;
+}
+
 void USBLamp::send() {
     int requesttype = 0x21;
     int request = 0x09;

@@ -9,14 +9,15 @@
 #define ID_VENDOR 0x1d34
 #define ID_PRODUCT 0x0004
 
-#define CALL(X) printf("%s\n", #X); result = X; if(result < 0) { printf("Fehler %s\n", usb_strerror()); }
+#define CALL(X) printf("%s\n", #X); result = X; if(result < 0) { printf("Error %s\n", usb_strerror()); }
 
 class USBLamp {
 public:
     USBLamp();
     void open();
+    bool isConnected();
     void send(); // parameter color, ...
-	void sendInterrupt(); 
+    void sendInterrupt();
     void close();
     virtual ~USBLamp();
 private:
