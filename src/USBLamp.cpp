@@ -26,11 +26,12 @@ void USBLamp::open() {
 
             if (ID_VENDOR == dev->descriptor.idVendor && ID_PRODUCT == dev->descriptor.idProduct) {
                 device = dev;
+                usb_set_debug(254);
                 handler = usb_open(device);
                 int result;
-                CALL(usb_reset(handler))
-                //CALL(usb_detach_kernel_driver_np(handler, 0))
-                CALL(usb_set_configuration(handler, 1))
+                //CALL(usb_reset(handler))
+                CALL(usb_detach_kernel_driver_np(handler, 0))
+                //CALL(usb_set_configuration(handler, 1))
                 CALL(usb_claim_interface(handler, 0))
                 //CALL(usb_claim_interface(handler, 1))
                 return;
@@ -40,41 +41,70 @@ void USBLamp::open() {
     }
 
     return;
-    // todo keine lampe gefunden
+}
+
+void USBLamp::send(char *bytes, int size) {
+    int requesttype = USB_TYPE_CLASS | USB_RECIP_INTERFACE;
+    int request = 0x09;
+    int value = 0x200;
+    int index = 0x00;
+    int timeout = 10;
+
+    int result;
+    CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
+    printf("%d  bytes written/read\n", result);
+    if (size != result) {
+        printf("Error: color???\n");
+    }
+}
+
+void USBLamp::setColor(Color color) {
+    printf("Set color %d,%d,%d",color.getRed(), color.getGreen(), color.getBlue());
+    char *data = (char *) malloc(sizeof (char) *8);
+    data[0] = color.getRed();
+    data[1] = color.getGreen();
+    data[2] = color.getBlue();
+    data[3] = 0x00;
+    data[4] = 0x00;
+    data[5] = 0x00;
+    data[6] = 0x00;
+    data[7] = 0x05;
+    int size = 8;
+
+    send(data, size);
+}
+
+void USBLamp::switchOff() {
+    Color c = Color(0,0,0);
+    setColor(c);
 }
 
 bool USBLamp::isConnected() {
     return handler != NULL;
 }
 
-void USBLamp::send() {
-    int requesttype = 0x21;
-    int request = 0x09;
-    //int request = 0x18;
-    int value = 0x0;
-    int index = 0x0;
-    //int index = 0x2;
-    char *bytes = "ba7fb675";
-    int size = 8;
-    int timeout = 250;
-
-    int result;
-    CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
-}
-
-void USBLamp::sendInterrupt() {
+/*void USBLamp::sendInterrupt() {
     //int ep = 0x81;
     char *bytes = (char *) malloc(sizeof (char) *8);
+    bytes[0] = 'a';
+    bytes[1] = 'b';
+    bytes[2] = 'c';
+    bytes[3] = 'd';
+    bytes[4] = 'e';
+    bytes[5] = 'f';
+    bytes[6] = 'g';
+    bytes[7] = 'h';
     int size = 8;
     int timeout = 250;
 
     int result;
     //CALL(usb_interrupt_read(handler, ENDPOINT, bytes, size, timeout))
     CALL(usb_interrupt_write(handler, ENDPOINT, bytes, size, timeout))
-}
+}*/
 
 void USBLamp::close() {
     int result;
+    //CALL(usb_reset(handler)) // off
     CALL(usb_release_interface(handler, 0))
     CALL(usb_close(handler))
 }

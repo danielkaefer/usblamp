@@ -18,8 +18,19 @@ int main(int argc, char** argv) {
     USBLamp lamp = USBLamp();
     lamp.open();
     if (lamp.isConnected()) {
-        lamp.send();
-        lamp.sendInterrupt();
+        while(1) {
+            Color c = Color(0,0,127);
+            lamp.setColor(c);
+            sleep(1);
+            c = Color(127,0,0);
+            lamp.setColor(c);
+            sleep(1);
+            c = Color(0,60,60);
+            lamp.setColor(c);
+            sleep(1);
+        }
+        lamp.switchOff();
+        //lamp.sendInterrupt();
         lamp.close();
     } else {
         printf("no lamp found\n");

@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <usb.h>
 
+#include "Color.hpp"
+
 #define ENDPOINT 0x81
 #define ID_VENDOR 0x1d34
 #define ID_PRODUCT 0x0004
@@ -16,8 +18,10 @@ public:
     USBLamp();
     void open();
     bool isConnected();
-    void send(); // parameter color, ...
-    void sendInterrupt();
+    void switchOff();
+    void setColor(Color color);
+    //void sendInterrupt();
+    void send(char *data, int size);
     void close();
     virtual ~USBLamp();
 private:
