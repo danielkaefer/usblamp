@@ -13,12 +13,11 @@
 
 //using namespace std;
 
-
 int main(int argc, char** argv) {
     printf("start\n");
     USBLamp lamp = USBLamp();
     lamp.open();
-    if(lamp.isConnected()) {
+    if (lamp.isConnected()) {
         lamp.send();
         lamp.sendInterrupt();
         lamp.close();

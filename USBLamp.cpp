@@ -1,6 +1,5 @@
 #include "USBLamp.hpp"
 
-
 USBLamp::USBLamp() {
 }
 
@@ -28,9 +27,9 @@ void USBLamp::open() {
             if (ID_VENDOR == dev->descriptor.idVendor && ID_PRODUCT == dev->descriptor.idProduct) {
                 device = dev;
                 handler = usb_open(device);
-				int result;
-				CALL(usb_reset(handler))
-				CALL(usb_detach_kernel_driver_np(handler, 0))
+                int result;
+                CALL(usb_reset(handler))
+                //CALL(usb_detach_kernel_driver_np(handler, 0))
                 CALL(usb_set_configuration(handler, 1))
                 CALL(usb_claim_interface(handler, 0))
                 //CALL(usb_claim_interface(handler, 1))
@@ -59,25 +58,25 @@ void USBLamp::send() {
     int size = 8;
     int timeout = 250;
 
-	int result;
+    int result;
     CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
 }
 
 void USBLamp::sendInterrupt() {
-	int ep = 0x80;
-	char *bytes = (char *) malloc(sizeof(char)*8);
-	int size = 8;
-	int timeout = 250;
+    //int ep = 0x81;
+    char *bytes = (char *) malloc(sizeof (char) *8);
+    int size = 8;
+    int timeout = 250;
 
-	int result;
-	//CALL(usb_interrupt_read(handler, ep, bytes, size, timeout))
-	CALL(usb_interrupt_write(handler, ep, bytes, size, timeout))
+    int result;
+    //CALL(usb_interrupt_read(handler, ENDPOINT, bytes, size, timeout))
+    CALL(usb_interrupt_write(handler, ENDPOINT, bytes, size, timeout))
 }
 
 void USBLamp::close() {
-	int result;
+    int result;
     CALL(usb_release_interface(handler, 0))
-    usb_close(handler);
+    CALL(usb_close(handler))
 }
 
 USBLamp::~USBLamp() {
