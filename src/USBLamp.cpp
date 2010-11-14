@@ -76,12 +76,12 @@ void USBLamp::send(char *bytes, int size) {
     }
 }
 
-void USBLamp::setColor(Color color) {
-    printf("Set color %d,%d,%d",color.getRed(), color.getGreen(), color.getBlue());
+void USBLamp::setColor(char red, char green, char blue) {
+    printf("Set color %d,%d,%d",red, green, blue);
     char *data = (char *) malloc(sizeof (char) *8);
-    data[0] = color.getRed();
-    data[1] = color.getGreen();
-    data[2] = color.getBlue();
+    data[0] = red;
+    data[1] = green;
+    data[2] = blue;
     data[3] = 0x00;
     data[4] = 0x00;
     data[5] = 0x00;
@@ -93,8 +93,7 @@ void USBLamp::setColor(Color color) {
 }
 
 void USBLamp::switchOff() {
-    Color c = Color(0,0,0);
-    setColor(c);
+    setColor(0,0,0);
 }
 
 bool USBLamp::isConnected() {

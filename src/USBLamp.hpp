@@ -23,8 +23,6 @@
 #include <stdio.h>
 #include <usb.h>
 
-#include "Color.hpp"
-
 #define ENDPOINT 0x81
 #define ID_VENDOR 0x1d34
 #define ID_PRODUCT 0x0004
@@ -37,7 +35,7 @@ public:
     void open();
     bool isConnected();
     void switchOff();
-    void setColor(Color color);
+    void setColor(char red, char green, char blue);
     //void sendInterrupt();
     void send(char *data, int size);
     void close();

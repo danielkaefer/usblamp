@@ -25,13 +25,11 @@
 
 //using namespace std;
 
-void setColor(Color c) {
+void setColor(char red, char green, char blue) {
     USBLamp lamp = USBLamp();
     lamp.open();
     if (lamp.isConnected()) {
-        //c = Color(0,60,60);
-        lamp.setColor(c);
-        //lamp.sendInterrupt();
+        lamp.setColor(red, green, blue);
         lamp.close();
     } else {
         printf("no lamp found\n");
@@ -44,14 +42,14 @@ int main(int argc, char** argv) {
 
     if(argc == 2) {
         if(strcmp(argv[1], "red") == 0) {
-            setColor(Color(127,0,0));
+            setColor(127,0,0);
         } else if(strcmp(argv[1], "green") == 0) {
-            setColor(Color(0,127,0));
+            setColor(0,127,0);
         } else if(strcmp(argv[1], "blue") == 0) {
-            setColor(Color(0,0,127));
+            setColor(0,0,127);
         } else {
             // default set off
-            setColor(Color(0,0,0));
+            setColor(0,0,0);
         }
     } else {
         printf("usage\n");
