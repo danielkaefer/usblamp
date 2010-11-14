@@ -1,11 +1,11 @@
-WebMail Notifier Linux driver
-=============================
+WebMail Notifier Linux driver (Dream Cheeky)
+============================================
 
 Usage
 -----
 
-sudo ./usblamp red
-sudo ./usblamp off
+`sudo ./usblamp red`
+`sudo ./usblamp off`
 
 License
 -------
