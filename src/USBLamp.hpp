@@ -34,13 +34,14 @@ public:
     USBLamp();
     void open();
     bool isConnected();
+	void init();
     void switchOff();
     void setColor(char red, char green, char blue);
     //void sendInterrupt();
-    void send(char *data, int size);
     void close();
     virtual ~USBLamp();
 private:
+    void send(char *data, int size);
     struct usb_device *device;
     struct usb_dev_handle *handler;
 

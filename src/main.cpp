@@ -29,6 +29,7 @@ void setColor(char red, char green, char blue) {
     USBLamp lamp = USBLamp();
     lamp.open();
     if (lamp.isConnected()) {
+		lamp.init();
         lamp.setColor(red, green, blue);
         lamp.close();
     } else {

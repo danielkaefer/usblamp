@@ -76,6 +76,41 @@ void USBLamp::send(char *bytes, int size) {
     }
 }
 
+void USBLamp::init() {
+    int size = 8;
+    char *data = (char *) malloc(sizeof (char) *8);
+
+    data[0] = 0x1f;
+    data[1] = 0x02;
+    data[2] = 0x00;
+    data[3] = 0x2e;
+    data[4] = 0x00;
+    data[5] = 0x00;
+    data[6] = 0x2b;
+    data[7] = 0x03;
+    send(data, size);
+
+    data[0] = 0x00;
+    data[1] = 0x02;
+    data[2] = 0x00;
+    data[3] = 0x2e;
+    data[4] = 0x00;
+    data[5] = 0x00;
+    data[6] = 0x2b;
+    data[7] = 0x04;
+    send(data, size);
+
+    data[0] = 0x00;
+    data[1] = 0x02;
+    data[2] = 0x00;
+    data[3] = 0x2e;
+    data[4] = 0x00;
+    data[5] = 0x00;
+    data[6] = 0x2b;
+    data[7] = 0x05;
+    send(data, size);
+}
+
 void USBLamp::setColor(char red, char green, char blue) {
     printf("Set color %d,%d,%d",red, green, blue);
     char *data = (char *) malloc(sizeof (char) *8);
