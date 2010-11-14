@@ -4,6 +4,7 @@ WebMail Notifier Linux driver (Dream Cheeky)
 Installation
 ------------
 
+    sudo aptitude install libusb++-dev
     cd src
     make
     sudo make install
