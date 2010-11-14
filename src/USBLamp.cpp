@@ -77,36 +77,15 @@ void USBLamp::send(char *bytes, int size) {
 
 void USBLamp::init() {
     int size = 8;
-    char *data = (char *) malloc(sizeof (char) *8);
+    char data[8];
 
-    data[0] = 0x1f;
-    data[1] = 0x02;
-    data[2] = 0x00;
-    data[3] = 0x2e;
-    data[4] = 0x00;
-    data[5] = 0x00;
-    data[6] = 0x2b;
-    data[7] = 0x03;
+    data = { 0x1f, 0x02, 0x00, 0x2e, 0x00, 0x00, 0x2b, 0x03 };
     send(data, size);
 
-    data[0] = 0x00;
-    data[1] = 0x02;
-    data[2] = 0x00;
-    data[3] = 0x2e;
-    data[4] = 0x00;
-    data[5] = 0x00;
-    data[6] = 0x2b;
-    data[7] = 0x04;
+    data = { 0x00, 0x02, 0x00, 0x2e, 0x00, 0x00, 0x2b, 0x04 };
     send(data, size);
 
-    data[0] = 0x00;
-    data[1] = 0x02;
-    data[2] = 0x00;
-    data[3] = 0x2e;
-    data[4] = 0x00;
-    data[5] = 0x00;
-    data[6] = 0x2b;
-    data[7] = 0x05;
+    data = { 0x00, 0x02, 0x00, 0x2e, 0x00, 0x00, 0x2b, 0x05 };
     send(data, size);
 }
 
@@ -114,18 +93,9 @@ void USBLamp::setColor(char red, char green, char blue) {
     if(DEBUG) {
         printf("Set color %d,%d,%d\n",red, green, blue);
     }
-    char *data = (char *) malloc(sizeof (char) *8);
-    data[0] = red;
-    data[1] = green;
-    data[2] = blue;
-    data[3] = 0x00;
-    data[4] = 0x00;
-    data[5] = 0x00;
-    data[6] = 0x00;
-    data[7] = 0x05;
-    int size = 8;
+    char data[] = {red, green, blue, 0x00, 0x00, 0x00, 0x00, 0x05};
 
-    send(data, size);
+    send(data, 8);
 }
 
 void USBLamp::switchOff() {
@@ -135,25 +105,6 @@ void USBLamp::switchOff() {
 bool USBLamp::isConnected() {
     return handler != NULL;
 }
-
-/*void USBLamp::sendInterrupt() {
-    //int ep = 0x81;
-    char *bytes = (char *) malloc(sizeof (char) *8);
-    bytes[0] = 'a';
-    bytes[1] = 'b';
-    bytes[2] = 'c';
-    bytes[3] = 'd';
-    bytes[4] = 'e';
-    bytes[5] = 'f';
-    bytes[6] = 'g';
-    bytes[7] = 'h';
-    int size = 8;
-    int timeout = 250;
-
-    int result;
-    //CALL(usb_interrupt_read(handler, ENDPOINT, bytes, size, timeout))
-    CALL(usb_interrupt_write(handler, ENDPOINT, bytes, size, timeout))
-}*/
 
 void USBLamp::close() {
     int result;

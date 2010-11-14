@@ -42,7 +42,6 @@ public:
 	void init();
     void switchOff();
     void setColor(char red, char green, char blue);
-    //void sendInterrupt();
     void close();
     virtual ~USBLamp();
 private:
