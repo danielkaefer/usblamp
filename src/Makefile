@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -Wall
 LIBS = -lusb
 SRC = main.cpp USBLamp.cpp USBLamp.hpp Color.cpp Color.hpp
-BIN = main
+BIN = usblamp
 
 main: $(SRC)
 	$(CC) $(CFLAGS) -o $(BIN) $+ $(LIBS)
