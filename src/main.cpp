@@ -39,15 +39,20 @@ void setColor(char red, char green, char blue) {
 }
 
 int main(int argc, char** argv) {
-    printf("start\n");
 
     if(argc == 2) {
         if(strcmp(argv[1], "red") == 0) {
-            setColor(127,0,0);
+            setColor(255,0,0);
         } else if(strcmp(argv[1], "green") == 0) {
-            setColor(0,127,0);
+            setColor(0,255,0);
         } else if(strcmp(argv[1], "blue") == 0) {
-            setColor(0,0,127);
+            setColor(0,0,255);
+        } else if(strcmp(argv[1], "white") == 0) {
+            setColor(255,255,255);
+        } else if(strcmp(argv[1], "magenta") == 0) {
+            setColor(255,0,255);
+        } else if(strcmp(argv[1], "cyan") == 0) {
+            setColor(0,255,255);
         } else {
             // default set off
             setColor(0,0,0);
@@ -55,8 +60,6 @@ int main(int argc, char** argv) {
     } else {
         printf("usage\n");
     }
-
-    printf("end\n");
 
     return 0;
 }

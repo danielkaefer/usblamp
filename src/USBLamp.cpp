@@ -44,7 +44,7 @@ void USBLamp::open() {
 
             if (ID_VENDOR == dev->descriptor.idVendor && ID_PRODUCT == dev->descriptor.idProduct) {
                 device = dev;
-                usb_set_debug(254);
+                //usb_set_debug(254);
                 handler = usb_open(device);
                 int result;
                 //CALL(usb_reset(handler))
@@ -70,7 +70,6 @@ void USBLamp::send(char *bytes, int size) {
 
     int result;
     CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
-    printf("%d  bytes written/read\n", result);
     if (size != result) {
         printf("Error: color???\n");
     }
@@ -112,7 +111,9 @@ void USBLamp::init() {
 }
 
 void USBLamp::setColor(char red, char green, char blue) {
-    printf("Set color %d,%d,%d",red, green, blue);
+    if(DEBUG) {
+        printf("Set color %d,%d,%d\n",red, green, blue);
+    }
     char *data = (char *) malloc(sizeof (char) *8);
     data[0] = red;
     data[1] = green;
