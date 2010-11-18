@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <usb.h>
 #include <string.h>
+#include <iostream>
+#include <string>
 
 #include "USBLamp.hpp"
 
@@ -38,10 +40,40 @@ void setColor(char red, char green, char blue) {
 
 }
 
+void parseColor(char* hexcode) {
+	if(strlen(hexcode) != 7) {
+		return;
+	}
+
+	for(int i=1; i<7; ++i) {
+		if(hexcode[i] < '0' && hexcode[i] > '9') {
+			return;
+		}
+	}
+
+	std::string hex(hexcode);
+
+	unsigned int red;
+	unsigned int green;
+	unsigned int blue;
+	sscanf(hex.substr(1,2).c_str(), "%X", &red);
+	sscanf(hex.substr(3,2).c_str(), "%X", &green);
+	sscanf(hex.substr(5,2).c_str(), "%X", &blue);
+	setColor(red, green, blue);
+}
+
 int main(int argc, char** argv) {
 
+	if(geteuid() != 0) {
+		std::cout << "Need root access" << std::endl;
+		return 1;
+	}
+
+
     if(argc == 2) {
-        if(strcmp(argv[1], "red") == 0) {
+		if((argv[1][0]) == '#') {
+			parseColor(argv[1]);
+		} else if(strcmp(argv[1], "red") == 0) {
             setColor(255,0,0);
         } else if(strcmp(argv[1], "green") == 0) {
             setColor(0,255,0);
@@ -58,7 +90,16 @@ int main(int argc, char** argv) {
             setColor(0,0,0);
         }
     } else {
-        printf("usage\n");
+        std::cout << "Usage: usblamp color" << std::endl;
+        std::cout << "   or usblamp off" << std::endl;
+        std::cout << "where colors include:" << std::endl;
+        std::cout << "    red" << std::endl;
+        std::cout << "    blue" << std::endl;
+        std::cout << "    green" << std::endl;
+        std::cout << "    white" << std::endl;
+        std::cout << "    magenta" << std::endl;
+        std::cout << "    cyan" << std::endl;
+        std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
     }
 
     return 0;

@@ -48,7 +48,8 @@ void USBLamp::open() {
                 handler = usb_open(device);
                 int result;
                 //CALL(usb_reset(handler))
-                CALL(usb_detach_kernel_driver_np(handler, 0))
+                //CALL(usb_detach_kernel_driver_np(handler, 0))
+                usb_detach_kernel_driver_np(handler, 0);
                 //CALL(usb_set_configuration(handler, 1))
                 CALL(usb_claim_interface(handler, 0))
                 //CALL(usb_claim_interface(handler, 1))
