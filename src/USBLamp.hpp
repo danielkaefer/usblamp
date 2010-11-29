@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <usb.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define ENDPOINT 0x81
 #define ID_VENDOR 0x1d34
 #define ID_PRODUCT 0x0004
