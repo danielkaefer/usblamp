@@ -1,0 +1,4 @@
+#!/bin/sh
+# Copy that file to serverload-config.sh and
+# fill in your server hostname or IP
+host=FIXME
