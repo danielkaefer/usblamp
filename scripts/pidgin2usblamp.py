@@ -20,6 +20,7 @@ import gobject
 import subprocess
 import time
 import signal
+import usblamp
 from dbus.mainloop.glib import DBusGMainLoop
 
 def handler(signum, fame):
@@ -27,32 +28,28 @@ def handler(signum, fame):
     raise SystemExit()
 signal.signal(signal.SIGINT, handler)
 
-def lamp(color):
-	shell = "usblamp %s" % color
-	subprocess.Popen([shell], shell=True, stdout=subprocess.PIPE, close_fds=True)
-
 def send2usb(username, message):
 	print "Nachricht von %s" % username
-	lamp("red")
+	usblamp.switchTo("red")
 	time.sleep(0.5)
-	lamp("off")
+	usblamp.switchTo("off")
 	time.sleep(0.2)
-	lamp("red")
+	usblamp.switchTo("red")
 	time.sleep(0.5)
-	lamp("off")
+	usblamp.switchTo("off")
 	time.sleep(0.2)
-	lamp("red")
+	usblamp.switchTo("red")
 	time.sleep(0.5)
-	lamp("white")
+	usblamp.switchTo("white")
 
 def receivedMessage(account, sender, message, conversation, flags):
     buddy = purple.PurpleFindBuddy(account, sender)
     alias = purple.PurpleBuddyGetAlias(buddy)
     send2usb(alias, message)
 
-lamp("blue")
+usblamp.switchTo("blue")
 time.sleep(7.5)
-lamp("off")
+usblamp.switchTo("off")
 
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 bus = dbus.SessionBus()
