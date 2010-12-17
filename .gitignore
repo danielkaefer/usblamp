@@ -1,2 +1,4 @@
 usblamp
 scripts/serverload-config.sh
+scripts/imap.conf
+scripts/*.pyc

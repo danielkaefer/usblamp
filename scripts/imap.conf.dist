@@ -1,0 +1,4 @@
+host: example.org
+username: john.doe
+password: secret
+refresh-time-interval: 300
