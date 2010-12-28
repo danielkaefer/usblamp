@@ -18,9 +18,17 @@
 import imaplib
 import yaml
 import time
+import os
+import sys
+from os import path
 import usblamp
 
-f = open('imap.conf')
+configFile = '%s/imap.conf' % path.dirname(__file__)
+if not os.path.exists(configFile):
+	print 'Config file not found'
+	sys.exit(1);
+
+f = open(configFile)
 conf = yaml.load(f)
 f.close()
 
