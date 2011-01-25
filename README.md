@@ -13,7 +13,7 @@ Usage
 
  * Switch the red light on `usblamp red`
  * Switch to green light on (hexcode) `usblamp #00FF00`
- * Turn the lamp `usblamp off`
+ * Turn the lamp off `usblamp off`
 
 License
 -------
