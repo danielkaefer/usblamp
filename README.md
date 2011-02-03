@@ -11,9 +11,9 @@ dependency libusb++-dev
 Usage
 -----
 
- * Switch the red light on `usblamp red`
- * Switch to green light on (hexcode) `usblamp #00FF00`
- * Turn the lamp off `usblamp off`
+ * Switch the red light on `sudo usblamp red`
+ * Switch to green light on (hexcode) `sudo usblamp #00FF00`
+ * Turn the lamp off `sudo usblamp off`
 
 License
 -------
