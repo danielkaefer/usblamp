@@ -28,15 +28,15 @@
 //using namespace std;
 
 void setColor(char red, char green, char blue) {
-    USBLamp lamp = USBLamp();
-    lamp.open();
-    if (lamp.isConnected()) {
+	USBLamp lamp = USBLamp();
+	lamp.open();
+	if (lamp.isConnected()) {
 		lamp.init();
-        lamp.setColor(red, green, blue);
-        lamp.close();
-    } else {
-        printf("no lamp found\n");
-    }
+		lamp.setColor(red, green, blue);
+		lamp.close();
+	} else {
+		printf("no lamp found\n");
+	}
 
 }
 
@@ -70,37 +70,38 @@ int main(int argc, char** argv) {
 	}
 
 
-    if(argc == 2) {
+	if(argc == 2) {
 		if((argv[1][0]) == '#') {
 			parseColor(argv[1]);
 		} else if(strcmp(argv[1], "red") == 0) {
-            setColor(255,0,0);
-        } else if(strcmp(argv[1], "green") == 0) {
-            setColor(0,255,0);
-        } else if(strcmp(argv[1], "blue") == 0) {
-            setColor(0,0,255);
-        } else if(strcmp(argv[1], "white") == 0) {
-            setColor(255,255,255);
-        } else if(strcmp(argv[1], "magenta") == 0) {
-            setColor(255,0,255);
-        } else if(strcmp(argv[1], "cyan") == 0) {
-            setColor(0,255,255);
-        } else {
-            // default set off
-            setColor(0,0,0);
-        }
-    } else {
-        std::cout << "Usage: usblamp color" << std::endl;
-        std::cout << "   or usblamp off" << std::endl;
-        std::cout << "where colors include:" << std::endl;
-        std::cout << "    red" << std::endl;
-        std::cout << "    blue" << std::endl;
-        std::cout << "    green" << std::endl;
-        std::cout << "    white" << std::endl;
-        std::cout << "    magenta" << std::endl;
-        std::cout << "    cyan" << std::endl;
-        std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
-    }
+			setColor(255,0,0);
+		} else if(strcmp(argv[1], "green") == 0) {
+			setColor(0,255,0);
+		} else if(strcmp(argv[1], "blue") == 0) {
+			setColor(0,0,255);
+		} else if(strcmp(argv[1], "white") == 0) {
+			setColor(255,255,255);
+		} else if(strcmp(argv[1], "magenta") == 0) {
+			setColor(255,0,255);
+		} else if(strcmp(argv[1], "cyan") == 0) {
+			setColor(0,255,255);
+		} else {
+			// default set off
+			setColor(0,0,0);
+		}
+	} else {
+		std::cout << "Usage: usblamp color" << std::endl;
+		std::cout << "   or usblamp off" << std::endl;
+		std::cout << "where colors include:" << std::endl;
+		std::cout << "	red" << std::endl;
+		std::cout << "	blue" << std::endl;
+		std::cout << "	green" << std::endl;
+		std::cout << "	white" << std::endl;
+		std::cout << "	magenta" << std::endl;
+		std::cout << "	cyan" << std::endl;
+		std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
+	}
 
-    return 0;
+	return 0;
 }
+// vim: noai:ts=4:sw=4
