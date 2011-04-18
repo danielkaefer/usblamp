@@ -47,24 +47,35 @@ void setColor(Color color) {
 
 }
 
-void parseColor(char* hexcode) {
-	if(strlen(hexcode) != 7) {
-		return;
-	}
-
-	for(int i=1; i<7; ++i) {
-		if(hexcode[i] < '0' && hexcode[i] > '9') {
-			return;
+Color getColor(char* color) {
+	if((color[0]) == '#') {
+		if(strlen(color) != 7) {
+			return Color();
 		}
+		std::string hex(color);
+		unsigned int red = 0, green = 0, blue = 0;
+		if ((sscanf(hex.substr(1,2).c_str(), "%X", &red) +
+			sscanf(hex.substr(3,2).c_str(), "%X", &green) +
+			sscanf(hex.substr(5,2).c_str(), "%X", &blue))!=3) {
+			return Color();
+		}
+		return Color(red, green, blue);
+	} else if(strcmp(color, "red") == 0) {
+		return Color(255,0,0);
+	} else if(strcmp(color, "green") == 0) {
+		return Color(0,255,0);
+	} else if(strcmp(color, "blue") == 0) {
+		return Color(0,0,255);
+	} else if(strcmp(color, "white") == 0) {
+		return Color(255,255,255);
+	} else if(strcmp(color, "magenta") == 0) {
+		return Color(255,0,255);
+	} else if(strcmp(color, "cyan") == 0) {
+		return Color(0,255,255);
+	} else {
+		// default set off
+		return Color(0,0,0);
 	}
-
-	std::string hex(hexcode);
-
-	unsigned int red, green, blue;
-	sscanf(hex.substr(1,2).c_str(), "%X", &red);
-	sscanf(hex.substr(3,2).c_str(), "%X", &green);
-	sscanf(hex.substr(5,2).c_str(), "%X", &blue);
-	setColor(Color(red, green, blue));
 }
 
 int main(int argc, char** argv) {
@@ -76,24 +87,7 @@ int main(int argc, char** argv) {
 
 
 	if(argc == 2) {
-		if((argv[1][0]) == '#') {
-			parseColor(argv[1]);
-		} else if(strcmp(argv[1], "red") == 0) {
-			setColor(Color(255,0,0));
-		} else if(strcmp(argv[1], "green") == 0) {
-			setColor(Color(0,255,0));
-		} else if(strcmp(argv[1], "blue") == 0) {
-			setColor(Color(0,0,255));
-		} else if(strcmp(argv[1], "white") == 0) {
-			setColor(Color(255,255,255));
-		} else if(strcmp(argv[1], "magenta") == 0) {
-			setColor(Color(255,0,255));
-		} else if(strcmp(argv[1], "cyan") == 0) {
-			setColor(Color(0,255,255));
-		} else {
-			// default set off
-			setColor(Color(0,0,0));
-		}
+		setColor(getColor(argv[1]));
 	} else {
 		std::cout << "Usage: usblamp color" << std::endl;
 		std::cout << "   or usblamp off" << std::endl;
