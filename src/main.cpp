@@ -27,12 +27,19 @@
 
 //using namespace std;
 
-void setColor(char red, char green, char blue) {
+struct Color {
+	unsigned char red, green, blue;
+	Color() : red(0), green(0), blue(0) { }
+	Color(unsigned char r, unsigned char g, unsigned char b) : red(r), green(g), blue(b) { }
+};
+
+
+void setColor(Color color) {
 	USBLamp lamp = USBLamp();
 	lamp.open();
 	if (lamp.isConnected()) {
 		lamp.init();
-		lamp.setColor(red, green, blue);
+		lamp.setColor(color.red, color.green, color.blue);
 		lamp.close();
 	} else {
 		printf("no lamp found\n");
@@ -53,13 +60,11 @@ void parseColor(char* hexcode) {
 
 	std::string hex(hexcode);
 
-	unsigned int red;
-	unsigned int green;
-	unsigned int blue;
+	unsigned int red, green, blue;
 	sscanf(hex.substr(1,2).c_str(), "%X", &red);
 	sscanf(hex.substr(3,2).c_str(), "%X", &green);
 	sscanf(hex.substr(5,2).c_str(), "%X", &blue);
-	setColor(red, green, blue);
+	setColor(Color(red, green, blue));
 }
 
 int main(int argc, char** argv) {
@@ -74,20 +79,20 @@ int main(int argc, char** argv) {
 		if((argv[1][0]) == '#') {
 			parseColor(argv[1]);
 		} else if(strcmp(argv[1], "red") == 0) {
-			setColor(255,0,0);
+			setColor(Color(255,0,0));
 		} else if(strcmp(argv[1], "green") == 0) {
-			setColor(0,255,0);
+			setColor(Color(0,255,0));
 		} else if(strcmp(argv[1], "blue") == 0) {
-			setColor(0,0,255);
+			setColor(Color(0,0,255));
 		} else if(strcmp(argv[1], "white") == 0) {
-			setColor(255,255,255);
+			setColor(Color(255,255,255));
 		} else if(strcmp(argv[1], "magenta") == 0) {
-			setColor(255,0,255);
+			setColor(Color(255,0,255));
 		} else if(strcmp(argv[1], "cyan") == 0) {
-			setColor(0,255,255);
+			setColor(Color(0,255,255));
 		} else {
 			// default set off
-			setColor(0,0,0);
+			setColor(Color(0,0,0));
 		}
 	} else {
 		std::cout << "Usage: usblamp color" << std::endl;
