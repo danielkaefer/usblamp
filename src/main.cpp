@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <usb.h>
 #include <string.h>
 #include <iostream>
@@ -47,7 +48,7 @@ void setColor(Color color) {
 
 }
 
-Color getColor(char* color) {
+Color getColor(char* color, unsigned char maxval) {
 	if((color[0]) == '#') {
 		if(strlen(color) != 7) {
 			return Color();
@@ -55,42 +56,61 @@ Color getColor(char* color) {
 		std::string hex(color);
 		unsigned int red = 0, green = 0, blue = 0;
 		if ((sscanf(hex.substr(1,2).c_str(), "%X", &red) +
-			sscanf(hex.substr(3,2).c_str(), "%X", &green) +
-			sscanf(hex.substr(5,2).c_str(), "%X", &blue))!=3) {
+					sscanf(hex.substr(3,2).c_str(), "%X", &green) +
+					sscanf(hex.substr(5,2).c_str(), "%X", &blue))!=3) {
 			return Color();
 		}
+		if (red>maxval) red=maxval;
+		if (green>maxval) green=maxval;
+		if (blue>maxval) blue=maxval;
 		return Color(red, green, blue);
 	} else if(strcmp(color, "red") == 0) {
-		return Color(255,0,0);
+		return Color(maxval,0,0);
 	} else if(strcmp(color, "green") == 0) {
-		return Color(0,255,0);
+		return Color(0,maxval,0);
 	} else if(strcmp(color, "blue") == 0) {
-		return Color(0,0,255);
+		return Color(0,0,maxval);
 	} else if(strcmp(color, "white") == 0) {
-		return Color(255,255,255);
+		return Color(maxval,maxval,maxval);
 	} else if(strcmp(color, "magenta") == 0) {
-		return Color(255,0,255);
+		return Color(maxval,0,maxval);
 	} else if(strcmp(color, "cyan") == 0) {
-		return Color(0,255,255);
+		return Color(0,maxval,maxval);
 	} else {
 		// default set off
 		return Color(0,0,0);
 	}
 }
 
+
 int main(int argc, char** argv) {
+	unsigned char maxval = 0x40; // Brightest value
+	unsigned int delay = 250; // Milliseconds
 
 	if(geteuid() != 0) {
 		std::cout << "Need root access" << std::endl;
 		return 1;
 	}
 
-
-	if(argc == 2) {
-		setColor(getColor(argv[1]));
+	if(argc > 1) {
+		for (int i=1; i<argc; ++i) {
+			Color color = getColor(argv[i], maxval);
+			setColor(color);
+			if (i+1<argc) {
+				Color nextColor = getColor(argv[i+1], maxval);
+				// Do fading
+				for (int j=0; j<maxval; ++j) {
+					usleep(delay*1000/maxval+1);
+					Color c;
+					c.red = color.red + (nextColor.red-color.red)*j/maxval;
+					c.green = color.green + (nextColor.green-color.green)*j/maxval;
+					c.blue = color.blue + (nextColor.blue-color.blue)*j/maxval;
+					setColor(c);
+				}
+			}
+		}
 	} else {
-		std::cout << "Usage: usblamp color" << std::endl;
-		std::cout << "   or usblamp off" << std::endl;
+		std::cout << "Usage: usblamp color [color...]" << std::endl;
 		std::cout << "where colors include:" << std::endl;
 		std::cout << "	red" << std::endl;
 		std::cout << "	blue" << std::endl;
@@ -98,6 +118,8 @@ int main(int argc, char** argv) {
 		std::cout << "	white" << std::endl;
 		std::cout << "	magenta" << std::endl;
 		std::cout << "	cyan" << std::endl;
+		std::cout << "	#rrggbb (hex)" << std::endl;
+		std::cout << "	off" << std::endl;
 		std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
 	}
 
