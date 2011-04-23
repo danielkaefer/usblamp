@@ -4,7 +4,9 @@ WebMail Notifier Linux driver (Dream Cheeky)
 Installation
 ------------
 dependency libusb++-dev
-    cd src
+    wget https://github.com/daniel-git/usblamp/tarball/master --no-check-certificate
+    tar xzf master
+    cd daniel-git-usblamp*/src
     make
     sudo make install
 
