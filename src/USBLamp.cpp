@@ -67,7 +67,7 @@ void USBLamp::send(char *bytes, int size) {
     int request = 0x09;
     int value = 0x200;
     int index = 0x00;
-    int timeout = 10;
+    int timeout = 100;
 
     int result;
     CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
