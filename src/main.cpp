@@ -34,20 +34,6 @@ struct Color {
 	Color(unsigned char r, unsigned char g, unsigned char b) : red(r), green(g), blue(b) { }
 };
 
-
-void setColor(Color color) {
-	USBLamp lamp = USBLamp();
-	lamp.open();
-	if (lamp.isConnected()) {
-		lamp.init();
-		lamp.setColor(color.red, color.green, color.blue);
-		lamp.close();
-	} else {
-		printf("no lamp found\n");
-	}
-
-}
-
 Color getColor(char* color, unsigned char maxval) {
 	if((color[0]) == '#') {
 		if(strlen(color) != 7) {
@@ -93,22 +79,31 @@ int main(int argc, char** argv) {
 	}
 
 	if(argc > 1) {
-		for (int i=1; i<argc; ++i) {
-			Color color = getColor(argv[i], maxval);
-			setColor(color);
-			if (i+1<argc) {
-				Color nextColor = getColor(argv[i+1], maxval);
-				// Do fading
-				for (int j=0; j<maxval; ++j) {
-					usleep(delay*1000/maxval+1);
-					Color c;
-					c.red = color.red + (nextColor.red-color.red)*j/maxval;
-					c.green = color.green + (nextColor.green-color.green)*j/maxval;
-					c.blue = color.blue + (nextColor.blue-color.blue)*j/maxval;
-					setColor(c);
+		USBLamp lamp = USBLamp();
+		lamp.open();
+		if (lamp.isConnected()) {
+			lamp.init();
+			for (int i=1; i<argc; ++i) {
+				Color color = getColor(argv[i], maxval);
+				lamp.setColor(color.red, color.green, color.blue);
+				if (i+1<argc) {
+					Color nextColor = getColor(argv[i+1], maxval);
+					// Do fading
+					for (int j=0; j<maxval; ++j) {
+						usleep(delay*1000/maxval+1);
+						Color c;
+						c.red = color.red + (nextColor.red-color.red)*j/maxval;
+						c.green = color.green + (nextColor.green-color.green)*j/maxval;
+						c.blue = color.blue + (nextColor.blue-color.blue)*j/maxval;
+						lamp.setColor(c.red, c.green, c.blue);
+					}
 				}
 			}
+			lamp.close();
+		} else {
+			std::cout << "no lamp forun" << std::endl;
 		}
+
 	} else {
 		std::cout << "Usage: usblamp color [color...]" << std::endl;
 		std::cout << "where colors include:" << std::endl;
