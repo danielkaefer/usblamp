@@ -35,7 +35,7 @@ struct Color {
 };
 
 Color getColor(char* color, unsigned char maxval) {
-	if((color[0]) == '#') {
+	if(((color[0]) == '#')  || ((color[0]) == '_')) {
 		if(strlen(color) != 7) {
 			return Color();
 		}
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 			}
 			lamp.close();
 		} else {
-			std::cout << "no lamp forun" << std::endl;
+			std::cout << "no lamp found" << std::endl;
 		}
 
 	} else {
