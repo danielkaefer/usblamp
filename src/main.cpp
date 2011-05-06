@@ -62,6 +62,8 @@ Color getColor(char* color, unsigned char maxval) {
 		return Color(maxval,0,maxval);
 	} else if(strcmp(color, "cyan") == 0) {
 		return Color(0,maxval,maxval);
+	} else if(strcmp(color, "yellow") == 0) {
+		return Color(maxval,maxval,0);
 	} else {
 		// default set off
 		return Color(0,0,0);
