@@ -32,14 +32,10 @@ void USBLamp::open() {
 
     struct usb_bus *bus;
 
-    /* ... */
-
     for (bus = busses; bus; bus = bus->next) {
         struct usb_device *dev;
 
         for (dev = bus->devices; dev; dev = dev->next) {
-            /* Check if this device is a printer */
-
             //printf("%04X:%04X\n", dev->descriptor.idVendor, dev->descriptor.idProduct);
 
             if (ID_VENDOR == dev->descriptor.idVendor && ID_PRODUCT == dev->descriptor.idProduct) {

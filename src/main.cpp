@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
 		std::cout << "	magenta" << std::endl;
 		std::cout << "	cyan" << std::endl;
 		std::cout << "	yellow" << std::endl;
-		std::cout << "	#rrggbb (hex)" << std::endl;
+		std::cout << "	'#rrggbb' (hex)" << std::endl;
 		std::cout << "	off" << std::endl;
 		std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
 	}
