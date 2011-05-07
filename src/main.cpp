@@ -35,7 +35,7 @@ struct Color {
 };
 
 Color getColor(char* color, unsigned char maxval) {
-	if((color[0]) == '#') {
+	if(((color[0]) == '#')  || ((color[0]) == '_')) {
 		if(strlen(color) != 7) {
 			return Color();
 		}
@@ -62,6 +62,8 @@ Color getColor(char* color, unsigned char maxval) {
 		return Color(maxval,0,maxval);
 	} else if(strcmp(color, "cyan") == 0) {
 		return Color(0,maxval,maxval);
+	} else if(strcmp(color, "yellow") == 0) {
+		return Color(maxval,maxval,0);
 	} else {
 		// default set off
 		return Color(0,0,0);
@@ -101,7 +103,7 @@ int main(int argc, char** argv) {
 			}
 			lamp.close();
 		} else {
-			std::cout << "no lamp forun" << std::endl;
+			std::cout << "no lamp found" << std::endl;
 		}
 
 	} else {
@@ -113,6 +115,7 @@ int main(int argc, char** argv) {
 		std::cout << "	white" << std::endl;
 		std::cout << "	magenta" << std::endl;
 		std::cout << "	cyan" << std::endl;
+		std::cout << "	yellow" << std::endl;
 		std::cout << "	#rrggbb (hex)" << std::endl;
 		std::cout << "	off" << std::endl;
 		std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
