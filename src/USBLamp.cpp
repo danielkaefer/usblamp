@@ -86,22 +86,37 @@ void USBLamp::init() {
     send(data, size);
 }
 
-void USBLamp::setColor(char red, char green, char blue) {
+void USBLamp::setColor(Color newColor) {
+	color = newColor;
+
     if(DEBUG) {
-        printf("Set color %d,%d,%d\n",red, green, blue);
+        printf("Set color %d,%d,%d\n",color.red, color.green, color.blue);
     }
-    char data[] = {red, green, blue, 0x00, 0x00, 0x00, 0x00, 0x05};
+    char data[] = {color.red, color.green, color.blue, 0x00, 0x00, 0x00, 0x00, 0x05};
 
     send(data, 8);
 }
 
 void USBLamp::switchOff() {
-    setColor(0,0,0);
+    setColor(Color(0,0,0));
 }
 
 bool USBLamp::isConnected() {
     return handler != NULL;
 }
+
+void USBLamp::fading(unsigned int delay, Color newColor) {
+	// Do fading
+	for (int j=0; j<color.maxval; ++j) {
+		usleep(delay*1000/color.maxval+1);
+		Color c;
+		c.red = color.red + (newColor.red-color.red)*j/color.maxval;
+		c.green = color.green + (newColor.green-color.green)*j/color.maxval;
+		c.blue = color.blue + (newColor.blue-color.blue)*j/color.maxval;
+		setColor(c);
+	}
+}
+
 
 void USBLamp::close() {
     int result;

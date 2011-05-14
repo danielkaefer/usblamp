@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <usb.h>
 
+#include "Color.hpp"
+
 #define DEBUG 0
 #define ENDPOINT 0x81
 #define ID_VENDOR 0x1d34
@@ -41,14 +43,15 @@ public:
     bool isConnected();
 	void init();
     void switchOff();
-    void setColor(char red, char green, char blue);
+    void setColor(Color newColor);
+	void fading(unsigned int delay, Color newColor);
     void close();
     virtual ~USBLamp();
 private:
     void send(char *data, int size);
     struct usb_device *device;
     struct usb_dev_handle *handler;
-
+	Color color;
 };
 
 #endif	/* USBLAMP_H */

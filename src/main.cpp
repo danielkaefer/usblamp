@@ -23,16 +23,12 @@
 #include <string.h>
 #include <iostream>
 #include <string>
+#include <unistd.h>
 
 #include "USBLamp.hpp"
+#include "Color.hpp"
 
 //using namespace std;
-
-struct Color {
-	unsigned char red, green, blue;
-	Color() : red(0), green(0), blue(0) { }
-	Color(unsigned char r, unsigned char g, unsigned char b) : red(r), green(g), blue(b) { }
-};
 
 Color getColor(char* color, unsigned char maxval) {
 	if(((color[0]) == '#')  || ((color[0]) == '_')) {
@@ -70,11 +66,27 @@ Color getColor(char* color, unsigned char maxval) {
 	}
 }
 
+void print_help() {
+	std::cout << "Usage: usblamp color [color...]" << std::endl;
+	std::cout << "where colors include:" << std::endl;
+	std::cout << "	red" << std::endl;
+	std::cout << "	blue" << std::endl;
+	std::cout << "	green" << std::endl;
+	std::cout << "	white" << std::endl;
+	std::cout << "	magenta" << std::endl;
+	std::cout << "	cyan" << std::endl;
+	std::cout << "	yellow" << std::endl;
+	std::cout << "	'#rrggbb' (hex)" << std::endl;
+	std::cout << "	off" << std::endl;
+	std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
+}
+
 
 int main(int argc, char** argv) {
 	unsigned char maxval = 0x40; // Brightest value
 	unsigned int delay = 250; // Milliseconds
 
+	// Check root access
 	if(geteuid() != 0) {
 		std::cout << "Need root access" << std::endl;
 		return 1;
@@ -87,18 +99,10 @@ int main(int argc, char** argv) {
 			lamp.init();
 			for (int i=1; i<argc; ++i) {
 				Color color = getColor(argv[i], maxval);
-				lamp.setColor(color.red, color.green, color.blue);
+				lamp.setColor(color);
 				if (i+1<argc) {
 					Color nextColor = getColor(argv[i+1], maxval);
-					// Do fading
-					for (int j=0; j<maxval; ++j) {
-						usleep(delay*1000/maxval+1);
-						Color c;
-						c.red = color.red + (nextColor.red-color.red)*j/maxval;
-						c.green = color.green + (nextColor.green-color.green)*j/maxval;
-						c.blue = color.blue + (nextColor.blue-color.blue)*j/maxval;
-						lamp.setColor(c.red, c.green, c.blue);
-					}
+					lamp.fading(delay, nextColor);
 				}
 			}
 			lamp.close();
@@ -107,18 +111,7 @@ int main(int argc, char** argv) {
 		}
 
 	} else {
-		std::cout << "Usage: usblamp color [color...]" << std::endl;
-		std::cout << "where colors include:" << std::endl;
-		std::cout << "	red" << std::endl;
-		std::cout << "	blue" << std::endl;
-		std::cout << "	green" << std::endl;
-		std::cout << "	white" << std::endl;
-		std::cout << "	magenta" << std::endl;
-		std::cout << "	cyan" << std::endl;
-		std::cout << "	yellow" << std::endl;
-		std::cout << "	'#rrggbb' (hex)" << std::endl;
-		std::cout << "	off" << std::endl;
-		std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
+		print_help();
 	}
 
 	return 0;

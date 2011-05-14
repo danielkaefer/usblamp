@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall -std=c++0x
 LIBS = -lusb
-SRC = main.cpp USBLamp.cpp USBLamp.hpp
+SRC = main.cpp USBLamp.cpp USBLamp.hpp Color.cpp Color.hpp
 BIN = usblamp
 
 main: $(SRC)
