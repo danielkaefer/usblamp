@@ -92,11 +92,32 @@ int main(int argc, char** argv) {
 	}
 
 	if(argc > 1) {
+
 		USBLamp lamp = USBLamp();
 		lamp.open();
 		if (lamp.isConnected()) {
 			lamp.init();
+			bool nextArgDelay = false;
 			for (int i=1; i<argc; ++i) {
+				if (strlen(argv[i]) > 4 && argv[i][0] == '-' && argv[i][1] == 'd') {
+					delay = atoi(&argv[i][2]);
+					if (DEBUG) {
+						std::cout << "Delay: " << delay << "ms" << std::endl;
+					}
+					continue;
+				}
+				if (strlen(argv[i]) == 2 && argv[i][0] == '-' && argv[i][1] == 'd') {
+					nextArgDelay = true;	
+					continue;
+				}
+				if (nextArgDelay) {
+					delay = atoi(argv[i]);
+					nextArgDelay = false;
+					if (DEBUG) {
+						std::cout << "Delay: " << delay << "ms" << std::endl;
+					}
+					continue;
+				}
 				Color color = getColor(argv[i], Color::maxval);
 				lamp.setColor(color);
 				if (i+1<argc) {
