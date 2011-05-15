@@ -83,7 +83,6 @@ void print_help() {
 
 
 int main(int argc, char** argv) {
-	unsigned char maxval = 0x40; // Brightest value
 	unsigned int delay = 250; // Milliseconds
 
 	// Check root access
@@ -98,10 +97,10 @@ int main(int argc, char** argv) {
 		if (lamp.isConnected()) {
 			lamp.init();
 			for (int i=1; i<argc; ++i) {
-				Color color = getColor(argv[i], maxval);
+				Color color = getColor(argv[i], Color::maxval);
 				lamp.setColor(color);
 				if (i+1<argc) {
-					Color nextColor = getColor(argv[i+1], maxval);
+					Color nextColor = getColor(argv[i+1], Color::maxval);
 					lamp.fading(delay, nextColor);
 				}
 			}
