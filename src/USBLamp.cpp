@@ -20,6 +20,7 @@
 #include "USBLamp.hpp"
 
 USBLamp::USBLamp() {
+    handler = NULL;
 }
 
 void USBLamp::open() {
