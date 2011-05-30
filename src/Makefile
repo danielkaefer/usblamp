@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -std=c++0x
+CFLAGS = -Wall
 LIBS = -lusb
 SRC = main.cpp USBLamp.cpp USBLamp.hpp Color.cpp Color.hpp
 BIN = usblamp
