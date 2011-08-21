@@ -19,7 +19,9 @@ if [ -z $old ]; then
 	old=0
 fi
 
-echo $new > ~/.svn_last_rev
+if [ "x" != "x$new" ]; then
+	echo $new > ~/.svn_last_rev
+fi
 
 if [[ $new -gt $old ]]; then
     # new revision available
