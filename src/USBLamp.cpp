@@ -85,6 +85,10 @@ void USBLamp::init() {
     send(data3, sizeof(data3));
 }
 
+Color USBLamp::getColor() {
+	return color;
+}
+
 void USBLamp::setColor(Color newColor) {
 	color = newColor;
 

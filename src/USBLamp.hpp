@@ -45,6 +45,7 @@ public:
 	void init();
     void switchOff();
     void setColor(Color newColor);
+	Color getColor();
 	void fading(unsigned int delay, Color newColor);
     void close();
     virtual ~USBLamp();
