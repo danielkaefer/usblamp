@@ -72,10 +72,10 @@ Color getColor(char* color, unsigned char maxval) {
 }
 
 void print_help() {
-	std::cout << "Usage: usblamp [-u <port>] [-d <delay>] color [color...]" << std::endl;
+	std::cout << "Usage: usblamp [-p <port>] [-d <delay>] color [color...]" << std::endl;
 	std::cout << "   -d <delay> will set fade delay between colors: default is 250ms" << std::endl;
 	std::cout << "   valid colors: [red blue green white magenta cyan yellow off] or #rrggbb (hex)" << std::endl << std::endl;
-	std::cout << "   -u <port> will listen on the specified UDP socket. Datagrams of >= 3 bytes" << std::endl;
+	std::cout << "   -p <port> will listen on the specified UDP socket. Datagrams of >= 3 bytes" << std::endl;
 	std::cout << "   will set color using bytes[0..2]=[red, green, blue], eg. [0 0xff 0xff]=cyan." << std::endl << std::endl;
 	std::cout << "   The previously set color will be sent as a reply." << std::endl << std::endl;
 	std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
@@ -145,26 +145,26 @@ int main(int argc, char** argv) {
 				char *argval = strlen(argv[i]) == 2 ? argv[++i] : &argv[i][2];
 				if (op == 'd') {
 					delay = atoi(argval);
-				if (DEBUG) {
-					std::cout << "Delay: " << delay << "ms" << std::endl;
-				}
+					if (DEBUG) {
+						std::cout << "Delay: " << delay << "ms" << std::endl;
+					}
 				} else if (op =='p') {
 				    port = atoi(argval);
-				if (DEBUG) {
+					if (DEBUG) {
 						std::cout << "Listening on UDP port " << port << std::endl;
-				}
+					}
 					i = argc;
 				} else {
 				    print_help();
-			}
+				}
 			} else {
-			Color color = getColor(argv[i], Color::maxval);
-			lamp.setColor(color);
-			if (i+1<argc) {
-				Color nextColor = getColor(argv[i+1], Color::maxval);
-				lamp.fading(delay, nextColor);
+				Color color = getColor(argv[i], Color::maxval);
+				lamp.setColor(color);
+				if (i+1<argc) {
+					Color nextColor = getColor(argv[i+1], Color::maxval);
+					lamp.fading(delay, nextColor);
+				}
 			}
-		}
 		}
 		if (port != 0) {
 		    listen(lamp, port);
