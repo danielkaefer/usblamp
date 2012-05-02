@@ -18,6 +18,13 @@ Usage
  * Switch the green light on (hexcode) `usblamp '#00FF00'`
  * Turn the lamp off `usblamp off`
 
+
+Contact
+-------
+email: usblamp@0x15.de
+issues: http://github.com/daniel-git/usblamp/issues
+
+
 License
 -------
 
