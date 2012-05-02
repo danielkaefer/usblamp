@@ -47,9 +47,9 @@ Color getColor(char* color, unsigned char maxval) {
 			return Color();
 		}
 
-		red = MAX(0, MIN(255, red*maxval/255));
-		green = MAX(0, MIN(255, green*maxval/255));
-		blue = MAX(0, MIN(255, blue*maxval/255));
+		red = std::max((unsigned int) 0, std::min((unsigned int) 255, red*maxval/255));
+		green = std::max((unsigned int) 0, std::min((unsigned int) 255, green*maxval/255));
+		blue = std::max((unsigned int) 0, std::min((unsigned int) 255, blue*maxval/255));
 		return Color(red, green, blue);
 	} else if(strcmp(color, "red") == 0) {
 		return Color(maxval,0,0);
@@ -105,9 +105,9 @@ void listen(USBLamp lamp, int port) {
 	do {
 		n = recvfrom(sock, buf, 1024, 0, (struct sockaddr *)&from, &length);
 		if (n > 2) {
-			int red = MAX(0, MIN(255, buf[0]*maxval/255));
-			int green = MAX(0, MIN(255, buf[1]*maxval/255));
-			int blue = MAX(0, MIN(255, buf[2]*maxval/255));
+			int red = std::max(0, std::min(255, buf[0]*maxval/255));
+			int green = std::max(0, std::min(255, buf[1]*maxval/255));
+			int blue = std::max(0, std::min(255, buf[2]*maxval/255));
 			Color color = Color(red, green, blue);
 			Color lastcolor = lamp.getColor();
 			lamp.setColor(color);
