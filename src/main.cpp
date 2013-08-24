@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
 	lamp.open();
 	if (lamp.isConnected()) {
 		lamp.init();
-		lamp.setColor(Color(0, 0, 0));		// Initialize to off
+		lamp.switchOff();
 		for (int i=1; i<argc; ++i) {
 			if (strlen(argv[i]) >= 2 && argv[i][0] == '-') {
 				char op = argv[i][1];
