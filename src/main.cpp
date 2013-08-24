@@ -36,14 +36,28 @@
 
 Color getColor(char* color, unsigned char maxval) {
 	if(((color[0]) == '#')  || ((color[0]) == '_')) {
-		if(strlen(color) != 7) {
+		if(strlen(color) != 4 && strlen(color) != 7) {
 			return Color();
 		}
 		std::string hex(color);
 		unsigned int red = 0, green = 0, blue = 0;
-		if ((sscanf(hex.substr(1,2).c_str(), "%X", &red) +
-					sscanf(hex.substr(3,2).c_str(), "%X", &green) +
-					sscanf(hex.substr(5,2).c_str(), "%X", &blue))!=3) {
+		// Try to parse it as a shorthand color (e.g. '#FFF')
+		if(strlen(color) == 4) {
+			if(sscanf(hex.substr(1,1).c_str(), "%X", &red) +
+					sscanf(hex.substr(2,1).c_str(), "%X", &green) +
+					sscanf(hex.substr(3,1).c_str(), "%X", &blue)==3) {
+				red = red << 4;
+				green = green << 4;
+				blue = blue << 4;
+			} else {
+				return Color();
+			}
+		}
+		// Try to parse the color (e.g. '#FFFFFF')
+		if(strlen(color) == 7 &&
+				(sscanf(hex.substr(1,2).c_str(), "%X", &red) +
+				sscanf(hex.substr(3,2).c_str(), "%X", &green) +
+				sscanf(hex.substr(5,2).c_str(), "%X", &blue))!=3) {
 			return Color();
 		}
 
