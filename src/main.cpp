@@ -41,7 +41,7 @@ Color getColor(char* color, unsigned char maxval) {
 		}
 		std::string hex(color);
 		unsigned int red = 0, green = 0, blue = 0;
-		// Try to parse it as a shorthand color (e.g. '#FFF')
+		// Try to parse the color as a shorthand 3-character color (e.g. '#FFF')
 		if(strlen(color) == 4) {
 			if(sscanf(hex.substr(1,1).c_str(), "%X", &red) +
 					sscanf(hex.substr(2,1).c_str(), "%X", &green) +
@@ -53,7 +53,7 @@ Color getColor(char* color, unsigned char maxval) {
 				return Color();
 			}
 		}
-		// Try to parse the color (e.g. '#FFFFFF')
+		// Try to parse the 6-character color (e.g. '#FFFFFF')
 		if(strlen(color) == 7 &&
 				(sscanf(hex.substr(1,2).c_str(), "%X", &red) +
 				sscanf(hex.substr(3,2).c_str(), "%X", &green) +
@@ -88,7 +88,7 @@ Color getColor(char* color, unsigned char maxval) {
 void print_help() {
 	std::cout << "Usage: usblamp [-p <port>] [-d <delay>] color [color...]" << std::endl;
 	std::cout << "   -d <delay> will set fade delay between colors: default is 250ms" << std::endl;
-	std::cout << "   valid colors: [red blue green white magenta cyan yellow off] or #rrggbb (hex)" << std::endl << std::endl;
+	std::cout << "   valid colors: [red blue green white magenta cyan yellow off], #rrggbb (hex) or #rgb (hex)" << std::endl << std::endl;
 	std::cout << "   -p <port> will listen on the specified UDP socket. Datagrams of >= 3 bytes" << std::endl;
 	std::cout << "   will set color using bytes[0..2]=[red, green, blue], eg. [0 0xff 0xff]=cyan." << std::endl << std::endl;
 	std::cout << "   The previously set color will be sent as a reply." << std::endl << std::endl;
