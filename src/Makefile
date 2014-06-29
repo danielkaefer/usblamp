@@ -8,9 +8,7 @@ main: $(SRC)
 	$(CC) $(CFLAGS) -o $(BIN) $+ $(LIBS)
 
 install:
-	cp $(BIN) /usr/bin/$(BIN)
-	chown root:root /usr/bin/$(BIN)
-	chmod u+s /usr/bin/$(BIN)
+	install -m 4755 $(BIN) /usr/bin
 
 archive_dir = /tmp/usblamp
 file_name = usblamp.sh
