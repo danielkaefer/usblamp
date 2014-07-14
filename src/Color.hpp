@@ -21,10 +21,10 @@
 #define	COLOR_H
 
 struct Color {
-	const static unsigned char maxval = 0x40; // Brightest value
-	unsigned char red, green, blue;
+	const static char maxval = 0x40; // Brightest value
+	char red, green, blue;
 	Color();
-	Color(unsigned char r, unsigned char g, unsigned char b);
+	Color(char r, char g, char b);
 };
 #endif	/* COLOR_H */
 

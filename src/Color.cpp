@@ -20,6 +20,6 @@
 #include "Color.hpp"
 
 Color::Color() : red(0), green(0), blue(0) { }
-Color::Color(unsigned char r, unsigned char g, unsigned char b) : red(r), green(g), blue(b) { }
+Color::Color(char r, char g, char b) : red(r), green(g), blue(b) { }
 
 // vim: noai:ts=4:sw=4
