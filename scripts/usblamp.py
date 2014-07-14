@@ -18,6 +18,5 @@
 import subprocess
 
 def switchTo(color):
-    shell = "usblamp %s" % color
-    subprocess.Popen([shell], shell=True, stdout=subprocess.PIPE, close_fds=True)
+    subprocess.Popen(["usblamp", color], stdout=subprocess.PIPE, close_fds=True)
 
