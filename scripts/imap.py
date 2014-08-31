@@ -23,12 +23,12 @@ import sys
 import usblamp
 
 configFile = '%s/imap.conf' % os.path.dirname(__file__)
-if not os.path.exists(configFile):
-	print 'Config file %r not found' % configFile
+try:
+    with open(configFile) as f:
+        conf = yaml.load(f)
+except IOError, e:
+	print(e)
 	sys.exit(1);
-
-with open(configFile) as f:
-    conf = yaml.load(f)
 
 while True:
 	mailbox = imaplib.IMAP4_SSL(conf['host'])
