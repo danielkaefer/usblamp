@@ -20,10 +20,9 @@ import yaml
 import time
 import os
 import sys
-from os import path
 import usblamp
 
-configFile = '%s/imap.conf' % path.dirname(__file__)
+configFile = '%s/imap.conf' % os.path.dirname(__file__)
 if not os.path.exists(configFile):
 	print 'Config file %r not found' % configFile
 	sys.exit(1);
