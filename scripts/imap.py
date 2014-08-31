@@ -22,7 +22,7 @@ import os
 import sys
 import usblamp
 
-configFile = '%s/imap.conf' % os.path.dirname(__file__)
+configFile = os.path.join(os.path.dirname(__file__), 'imap.conf')
 try:
     with open(configFile) as f:
         conf = yaml.load(f)
