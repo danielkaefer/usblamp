@@ -25,7 +25,7 @@ import usblamp
 
 configFile = '%s/imap.conf' % path.dirname(__file__)
 if not os.path.exists(configFile):
-	print 'Config file not found'
+	print 'Config file %r not found' % configFile
 	sys.exit(1);
 
 with open(configFile) as f:
