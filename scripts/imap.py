@@ -28,9 +28,8 @@ if not os.path.exists(configFile):
 	print 'Config file not found'
 	sys.exit(1);
 
-f = open(configFile)
-conf = yaml.load(f)
-f.close()
+with open(configFile) as f:
+    conf = yaml.load(f)
 
 while True:
 	mailbox = imaplib.IMAP4_SSL(conf['host'])
