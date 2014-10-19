@@ -29,7 +29,8 @@
 #define DEBUG 0
 #define ENDPOINT 0x81
 #define ID_VENDOR 0x1d34
-#define ID_PRODUCT 0x0004
+#define ID_PRODUCT_OLD 0x0004
+#define ID_PRODUCT_NEW 0x000a
 
 #if DEBUG
 #define CALL(X) printf("%s\n", #X); result = X; if(result < 0) { printf("ERROR Number: %d Description: %s\n", result, usb_strerror()); }

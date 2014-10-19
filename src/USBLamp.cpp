@@ -40,7 +40,7 @@ void USBLamp::open() {
         for (dev = bus->devices; dev; dev = dev->next) {
             //printf("%04X:%04X\n", dev->descriptor.idVendor, dev->descriptor.idProduct);
 
-            if (ID_VENDOR == dev->descriptor.idVendor && ID_PRODUCT == dev->descriptor.idProduct) {
+            if (ID_VENDOR == dev->descriptor.idVendor && (ID_PRODUCT_OLD == dev->descriptor.idProduct || ID_PRODUCT_NEW == dev->descriptor.idProduct)) {
                 device = dev;
                 //usb_set_debug(254);
                 handler = usb_open(device);
