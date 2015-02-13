@@ -31,7 +31,7 @@
 #include "USBLamp.hpp"
 #include "Color.hpp"
 
-//using namespace std;
+// using namespace std;
 
 Color getColor(const char* param, unsigned char maxval) {
   Color ret = Color();
