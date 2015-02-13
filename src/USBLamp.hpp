@@ -31,6 +31,8 @@
 #define ID_VENDOR 0x1d34
 #define ID_PRODUCT_OLD 0x0004
 #define ID_PRODUCT_NEW 0x000a
+#define ID_VENDOR_2 0x1294
+#define ID_PRODUCT_2 0x1320
 
 #if DEBUG
 #define CALL(X) printf("%s\n", #X); result = X; if(result < 0) { printf("ERROR Number: %d Description: %s\n", result, usb_strerror()); }
@@ -43,18 +45,19 @@ public:
     USBLamp();
     void open();
     bool isConnected();
-	void init();
+    void init();
     void switchOff();
     void setColor(Color newColor);
-	Color getColor();
-	void fading(unsigned int delay, Color newColor);
+    Color getColor();
+    void fading(unsigned int delay, Color newColor);
     void close();
     virtual ~USBLamp();
 private:
     void send(char *data, int size);
     struct usb_device *device;
     struct usb_dev_handle *handler;
-	Color color;
+    Color color;
+    char led_type;
 };
 
 #endif	/* USBLAMP_H */
