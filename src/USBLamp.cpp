@@ -81,7 +81,7 @@ void USBLamp::open() {
 
 void USBLamp::send(char *bytes, int size) {
   int result = 0;
-  int timeout = 1000;   // ms
+  int timeout = 1000;    // ms
 
   if (led_type == 1) {
     int requesttype = USB_TYPE_CLASS | USB_RECIP_INTERFACE;
