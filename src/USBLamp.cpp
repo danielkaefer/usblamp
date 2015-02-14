@@ -70,7 +70,7 @@ void USBLamp::send(char *bytes, int size) {
     int result;
     CALL(usb_control_msg(handler, requesttype, request, value, index, bytes, size, timeout))
     if (size != result) {
-        printf("Error: color???\n");
+        printf("Error: color?\n");
     }
 }
 
