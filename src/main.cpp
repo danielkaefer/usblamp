@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <usb.h>
 #include <string.h>
 #include <iostream>
 #include <string>
@@ -32,67 +31,64 @@
 #include "USBLamp.hpp"
 #include "Color.hpp"
 
-//using namespace std;
+// using namespace std;
 
-Color getColor(char* color, unsigned char maxval) {
-	if(((color[0]) == '#')  || ((color[0]) == '_')) {
-		if(strlen(color) != 4 && strlen(color) != 7) {
-			return Color();
-		}
-		std::string hex(color);
-		unsigned int red = 0, green = 0, blue = 0;
-		// Try to parse the color as a shorthand 3-character color (e.g. '#FFF')
-		if(strlen(color) == 4) {
-			if(sscanf(hex.substr(1,1).c_str(), "%X", &red) +
-					sscanf(hex.substr(2,1).c_str(), "%X", &green) +
-					sscanf(hex.substr(3,1).c_str(), "%X", &blue)==3) {
-				red = red << 4;
-				green = green << 4;
-				blue = blue << 4;
-			} else {
-				return Color();
-			}
-		}
-		// Try to parse the 6-character color (e.g. '#FFFFFF')
-		if(strlen(color) == 7 &&
-				(sscanf(hex.substr(1,2).c_str(), "%X", &red) +
-				sscanf(hex.substr(3,2).c_str(), "%X", &green) +
-				sscanf(hex.substr(5,2).c_str(), "%X", &blue))!=3) {
-			return Color();
-		}
-
-		red = std::max((unsigned int) 0, std::min((unsigned int) 255, red*maxval/255));
-		green = std::max((unsigned int) 0, std::min((unsigned int) 255, green*maxval/255));
-		blue = std::max((unsigned int) 0, std::min((unsigned int) 255, blue*maxval/255));
-		return Color(red, green, blue);
-	} else if(strcmp(color, "red") == 0) {
-		return Color(maxval,0,0);
-	} else if(strcmp(color, "green") == 0) {
-		return Color(0,maxval,0);
-	} else if(strcmp(color, "blue") == 0) {
-		return Color(0,0,maxval);
-	} else if(strcmp(color, "white") == 0) {
-		return Color(maxval,maxval,maxval);
-	} else if(strcmp(color, "magenta") == 0) {
-		return Color(maxval,0,maxval);
-	} else if(strcmp(color, "cyan") == 0) {
-		return Color(0,maxval,maxval);
-	} else if(strcmp(color, "yellow") == 0) {
-		return Color(maxval,maxval,0);
-	} else {
-		// default set off
-		return Color(0,0,0);
-	}
-}
-
-void print_help() {
-	std::cout << "Usage: usblamp [-p <port>] [-d <delay>] color [color...]" << std::endl;
-	std::cout << "   -d <delay> will set fade delay between colors: default is 250ms" << std::endl;
-	std::cout << "   valid colors: [red blue green white magenta cyan yellow off], #rrggbb (hex) or #rgb (hex)" << std::endl << std::endl;
-	std::cout << "   -p <port> will listen on the specified UDP socket. Datagrams of >= 3 bytes" << std::endl;
-	std::cout << "   will set color using bytes[0..2]=[red, green, blue], eg. [0 0xff 0xff]=cyan." << std::endl << std::endl;
-	std::cout << "   The previously set color will be sent as a reply." << std::endl << std::endl;
-	std::cout << "Website: https://github.com/daniel-git/usblamp" << std::endl;
+Color getColor(const char* param, unsigned char maxval) {
+  Color ret = Color();
+  if (param) {
+    char *p1,*color = (char*) malloc(strlen(param)+1);
+    strcpy(color,param);
+    if ((p1 = strchr(color,','))) *p1 = 0;
+    if(((color[0]) == '#')  || ((color[0]) == '_')) {
+      if(strlen(color) == 4 || strlen(color) == 7) {
+        char flag = 0;
+        std::string hex(color);
+        unsigned int red = 0, green = 0, blue = 0;
+        if (strlen(color) == 4) {
+// Try to parse the color as a shorthand 3-character color (e.g. '#FFF')
+          if (sscanf(hex.substr(1,1).c_str(), "%X", &red) +
+              sscanf(hex.substr(2,1).c_str(), "%X", &green) +
+              sscanf(hex.substr(3,1).c_str(), "%X", &blue) == 3) {
+            red = red << 4;
+            green = green << 4;
+            blue = blue << 4;
+            flag++;
+          }
+        } else if (strlen(color) == 7) {
+// Try to parse the 6-character color (e.g. '#FFFFFF')
+          if (sscanf(hex.substr(1,2).c_str(), "%X", &red) +
+              sscanf(hex.substr(3,2).c_str(), "%X", &green) +
+              sscanf(hex.substr(5,2).c_str(), "%X", &blue) == 3) {
+            flag++;
+          }  
+        }
+        if (flag) {
+          red = std::max((unsigned int) 0, std::min((unsigned int) 255, red*maxval/255));
+          green = std::max((unsigned int) 0, std::min((unsigned int) 255, green*maxval/255));
+          blue = std::max((unsigned int) 0, std::min((unsigned int) 255, blue*maxval/255));
+          ret =  Color(red, green, blue);
+        }
+      }
+    } else if (!strcmp(color, "red")) {
+      ret = Color(maxval,0,0);
+    } else if (!strcmp(color, "green")) {
+      ret = Color(0,maxval,0);
+    } else if (!strcmp(color, "blue")) {
+      ret = Color(0,0,maxval);
+    } else if (!strcmp(color, "white")) {
+      ret = Color(maxval,maxval,maxval);
+    } else if (!strcmp(color, "magenta")) {
+      ret = Color(maxval,0,maxval);
+    } else if (!strcmp(color, "cyan")) {
+      ret = Color(0,maxval,maxval);
+    } else if (!strcmp(color, "yellow")) {
+      ret = Color(maxval,maxval,0);
+    } else {                            // default set off
+      ret = Color(0,0,0);
+    }
+    free(color);
+  }
+  return ret;
 }
 
 void listen(USBLamp lamp, int port) {
@@ -133,61 +129,110 @@ void listen(USBLamp lamp, int port) {
 	} while (n >= 0);
 }
 
+void print_help() {
+	std::cout << "Usage: usblamp [-s] [-r <num>[,<delay>]] [-p <port>] [-d <delay>] color[,<delay>] [color...]" << std::endl;
+	std::cout << "   valid colors: [red blue green white magenta cyan yellow off], #rrggbb (hex) or #rgb (hex)" << std::endl;
+	std::cout << "   an optional parameter color[,<delay>] will overwrite the -d option for that color" << std::endl << std::endl;
+	std::cout << "   -s will switch between colors and disable fade" << std::endl << std::endl;
+	std::cout << "   -r <num>[,<delay>] will repeat the color sequence <num> times (default is 0)" << std::endl;
+	std::cout << "      with an optional <delay> (default is 0ms) between sequences" << std::endl << std::endl;
+	std::cout << "   -d <delay> will set switch/fade delay between colors (default is 250ms)" << std::endl << std::endl;
+	std::cout << "   -p <port> will listen on the specified UDP socket. Datagrams of >= 3 bytes" << std::endl;
+	std::cout << "      will set color using bytes[0..2]=[red, green, blue], eg. [0 0xff 0xff]=cyan." << std::endl << std::endl;
+//	std::cout << "   The previously set color will be sent as a reply." << std::endl << std::endl;
+	std::cout << "original website: https://github.com/daniel-git/usblamp" << std::endl << std::endl;
+	std::cout << "Version 1.0" << std::endl;
+	std::cout << "  supported USB lamps: 0x1d34:0x0004, 0x1d34:0x000a, 0x1294:0x1320" << std::endl;
+}
+
 int main(int argc, char** argv) {
-	unsigned int delay = 250; // Milliseconds
-	unsigned int port = 0;    // UDP datagram port
+    unsigned int delay = 250; // Milliseconds
+    unsigned int port = 0;    // UDP datagram port
+    unsigned short repeat = 0;
+    unsigned int repeat_wait = 0;
+    char opt_help = 0;
+    char opt_switch = 0;
+    int opt;
 
-	// Check root access
-	if(geteuid() != 0) {
-		std::cout << "Need root access" << std::endl;
-		return 1;
-	}
+// Check root access
+    if (geteuid() != 0) {
+	std::cout << "Need root access" << std::endl;
+	return 1;
+    }
 
-	if(argc < 2 || !strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
+    while ((opt = getopt(argc, argv, "hsr:d:p:")) != -1) {  // for each option...
+        char *p1;
+        switch ( opt ) {
+            case 'h':
+                opt_help++;
+                break;
+            case 's':
+                opt_switch++;
+                break;
+            case 'r':
+                repeat = atoi(optarg);
+                if ((p1 = strchr(optarg,','))) {
+                  repeat_wait = atoi(p1+1);
+                }
+                break;
+            case 'd':
+                delay = atoi(optarg);
+		if (DEBUG) {
+		    std::cout << "Delay: " << delay << "ms" << std::endl;
+		}
+                break;
+            case 'p':
+                port = atoi(optarg);
+                if (DEBUG) {
+		    std::cout << "Listening on UDP port " << port << std::endl;
+		}
+                break;
+            case '?':  // unknown option...
+                opt_help++;
+                break;
+        }
+    }
+    repeat++;
+    optind--;
+    argc -= optind;
+    argv += optind;
+    if ((!port && argc < 2) || opt_help) {
         print_help();
         return 0;
     }
 
-	USBLamp lamp = USBLamp();
-	lamp.open();
-	if (lamp.isConnected()) {
-		lamp.init();
-		lamp.switchOff();
-		for (int i=1; i<argc; ++i) {
-			if (strlen(argv[i]) >= 2 && argv[i][0] == '-') {
-				char op = argv[i][1];
-				char *argval = strlen(argv[i]) == 2 ? argv[++i] : &argv[i][2];
-				if (op == 'd') {
-					delay = atoi(argval);
-					if (DEBUG) {
-						std::cout << "Delay: " << delay << "ms" << std::endl;
-					}
-				} else if (op =='p') {
-				    port = atoi(argval);
-					if (DEBUG) {
-						std::cout << "Listening on UDP port " << port << std::endl;
-					}
-					i = argc;
-				} else {
-				    print_help();
-				}
-			} else {
-				Color color = getColor(argv[i], Color::maxval);
-				lamp.setColor(color);
-				if (i+1<argc) {
-					Color nextColor = getColor(argv[i+1], Color::maxval);
-					lamp.fading(delay, nextColor);
-				}
-			}
-		}
-		if (port != 0) {
-		    listen(lamp, port);
-		}
-		lamp.close();
-	} else {
-		std::cout << "no lamp found" << std::endl;
-	}
-
-	return 0;
+    USBLamp lamp = USBLamp();
+    lamp.open();
+    if (lamp.isConnected()) {
+        unsigned int wait = delay;
+        char first = 1;
+        lamp.init();
+        lamp.switchOff();
+        while (repeat--) {
+          for (int i=1; i<argc; i++) {
+              char *p1 = argv[i];
+              Color color = getColor(p1, Color::maxval);
+              if (first) {
+                  lamp.setColor(color);
+                  first = 0;
+              } else {
+                  if (opt_switch) {
+                    usleep(wait*1000);
+                    lamp.setColor(color);
+                  } else {
+                    lamp.fading(wait,color);
+                  }  
+              }
+              if ((p1 = strchr(p1,','))) wait = atoi(p1+1);
+              else wait = delay;
+          }
+          if (repeat && repeat_wait) usleep(repeat_wait * 1000);
+        }
+        if (port) listen(lamp, port);
+        lamp.close();
+    } else {
+        std::cout << "no lamp found" << std::endl;
+    }
+    return 0;
 }
 // vim: noai:ts=4:sw=4
