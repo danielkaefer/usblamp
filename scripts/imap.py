@@ -33,14 +33,18 @@ except IOError, e:
 while True:
 	mailbox = imaplib.IMAP4_SSL(conf['host'])
 	mailbox.login(conf['username'], conf['password'])
-	mailbox.select()
+	mailbox.select(conf['mailbox'])
 	typ, msgnums = mailbox.search(None,'UnSeen')
 	print msgnums
 	if msgnums[0]:
-		usblamp.switchTo('blue')
+		usblamp.switchTo(conf['colour'])
 
 	mailbox.close()
 	mailbox.logout()
 
-	time.sleep(conf['refresh-time-interval'])
+        try:
+            time.sleep(conf['refresh-time-interval'])
+        except (KeyboardInterrupt, SystemExit):
+            usblamp.switchTo('#000')
+            sys.exit()
 

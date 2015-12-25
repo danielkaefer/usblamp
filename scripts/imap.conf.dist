@@ -1,4 +1,6 @@
 host: example.org
 username: john.doe
 password: secret
+mailbox: INBOX
 refresh-time-interval: 300
+colour: blue
