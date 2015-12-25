@@ -83,6 +83,8 @@ Color getColor(const char* param, unsigned char maxval) {
       ret = Color(0,maxval,maxval);
     } else if (!strcmp(color, "yellow")) {
       ret = Color(maxval,maxval,0);
+    } else if (!strcmp(color, "pink")) {
+      ret = Color(maxval,0, maxval);
     } else {                            // default set off
       ret = Color(0,0,0);
     }
@@ -131,7 +133,7 @@ void listen(USBLamp lamp, int port) {
 
 void print_help() {
 	std::cout << "Usage: usblamp [-s] [-r <num>[,<delay>]] [-p <port>] [-d <delay>] color[,<delay>] [color...]" << std::endl;
-	std::cout << "   valid colors: [red blue green white magenta cyan yellow off], #rrggbb (hex) or #rgb (hex)" << std::endl;
+	std::cout << "   valid colors: [red blue green white magenta pink cyan yellow off], #rrggbb (hex) or #rgb (hex)" << std::endl;
 	std::cout << "   an optional parameter color[,<delay>] will overwrite the -d option for that color" << std::endl << std::endl;
 	std::cout << "   -s will switch between colors and disable fade" << std::endl << std::endl;
 	std::cout << "   -r <num>[,<delay>] will repeat the color sequence <num> times (default is 0)" << std::endl;
